@@ -1,0 +1,8 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="ISTQB-HelloWorld-Simple-Suite" verbose="1">
+    <test name="ISTQB-CTFL-Techniques">
+        <classes>
+            <class name="com.topchiyski.helloworld.HelloWorldTest"/>
+        </classes>
+    </test>
+</suite>
