@@ -6,7 +6,7 @@
 
 This is a **companion repository** to my LinkedIn article:
 
-📄 **[ARTICLE TITLE — coming soon](ARTICLE_LINK_PLACEHOLDER)**
+📄 **[ISTQB Is Dead Weight Until You Code It](https://www.linkedin.com/pulse/istqb-dead-weight-until-you-code-stoyan-topchiyski-irtpf)**
 
 It shows how every core software testing technique from the **ISTQB Certified Tester Foundation Level (CTFL v4.0)** syllabus applies to a beginner-friendly `"Hello, World!"` program in **Java** using **TestNG**.
 
