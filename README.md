@@ -26,6 +26,9 @@ The code is written in **100% classic imperative style**: no lambdas, no functio
 
 ```text
 .
+├── .mvn/wrapper/                    # Maven Wrapper config (pins the Maven version)
+├── mvnw                             # Maven Wrapper script (macOS / Linux)
+├── mvnw.cmd                         # Maven Wrapper script (Windows)
 ├── pom.xml
 └── src
     ├── main/java/com/topchiyski/helloworld
@@ -65,14 +68,31 @@ Each test in [`HelloWorldTest.java`](src/test/java/com/topchiyski/helloworld/Hel
 
 ### Prerequisites
 
-- **Java 21+**
-- **Maven 3.8+**
+- **Java 21 (LTS)**: a JDK, not just a JRE. Check with `java -version` and make sure `JAVA_HOME` points to it.
+
+That's it. You do **not** need to install Maven. The project ships with the [Maven Wrapper](https://maven.apache.org/tools/wrapper/), which downloads the correct Maven version automatically on first run.
 
 ### Run the Tests
 
+macOS / Linux:
+
 ```bash
-mvn clean test
+./mvnw clean test
 ```
+
+Windows (Command Prompt):
+
+```bat
+mvnw.cmd clean test
+```
+
+Windows (PowerShell):
+
+```powershell
+.\mvnw.cmd clean test
+```
+
+> Already have Maven installed? `mvn clean test` works too.
 
 The TestNG suite is configured in [`src/test/resources/testng.xml`](src/test/resources/testng.xml) and runs automatically through the Maven Surefire plugin.
 
