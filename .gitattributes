@@ -1,0 +1,3 @@
+# Maven Wrapper scripts must keep platform-native line endings
+mvnw     text eol=lf
+*.cmd    text eol=crlf
