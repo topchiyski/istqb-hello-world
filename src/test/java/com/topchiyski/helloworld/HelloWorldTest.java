@@ -185,6 +185,38 @@ public class HelloWorldTest {
         assertEquals(helloWorld.greet("World"), "Hello, World.");
     }
 
+    /**
+     * Completes <b>State Transition Testing</b> with the two self-transitions, so every valid
+     * transition of the ON/OFF state model is covered at least once.
+     *
+     * <p><b>Why self-transitions matter:</b>
+     * Calling {@code turnOn()} on a greeter that is already {@code ON}, or {@code turnOff()} on one
+     * that is already {@code OFF}, must leave the state unchanged. A toggle-style bug
+     * ({@code active = !active}) passes every test above but fails here.
+     * <ol>
+     *   <li>{@code ON -> turnOn() -> ON} (greeting still succeeds).</li>
+     *   <li>{@code OFF -> turnOff() -> OFF} (greeting is still blocked).</li>
+     * </ol>
+     */
+    @Test
+    public void testStateSelfTransitions() {
+        // 1. Self-transition: ON -> turnOn() -> ON
+        helloWorld.turnOn();
+        assertTrue(helloWorld.isActive());
+        assertEquals(helloWorld.greet("World"), "Hello, World.");
+
+        // 2. Self-transition: OFF -> turnOff() -> OFF
+        helloWorld.turnOff();
+        helloWorld.turnOff();
+        assertFalse(helloWorld.isActive());
+        try {
+            helloWorld.greet("World");
+            fail("Expected an IllegalStateException when greeter stays OFF.");
+        } catch (IllegalStateException expected) {
+            assertEquals(expected.getMessage(), "Greeter is currently turned OFF.");
+        }
+    }
+
     // =========================================================================
     // 5. STATEMENT & BRANCH COVERAGE (ISTQB White-Box Technique)
     // =========================================================================
@@ -198,20 +230,21 @@ public class HelloWorldTest {
      * to ensure every line (Statement) and every {@code true/false} decision (Branch) is executed at least once:
      * <ul>
      *   <li>Branch 1: {@code if (!active)} -> tested both {@code true} and {@code false}.</li>
-     *   <li>Branch 2: {@code if (name == null || name.isBlank())} -> tested {@code null}, blank, and real text.</li>
+     *   <li>Branch 2: {@code if (name == null || name.isBlank())} -> tested {@code null} and real text
+     *   (blank names are covered by the equivalence partitioning and boundary value tests).</li>
      *   <li>Branch 3: {@code if (cleanName.length() > MAX_LENGTH)} -> tested both valid and oversized names.</li>
      *   <li>Branch 4 & 5: {@code if (isFormal)} and {@code if (isShouting)} -> tested both {@code true} and {@code false}.</li>
      * </ul>
      */
     @Test
     public void testFullBranchAndStatementCoverage() {
-        // Branch path 1: active == true, normal name, formal == false, shouting == false
+        // Path 1: active == true, custom name (else), formal == false (else), shouting == false (else)
         assertEquals(helloWorld.greetWithStyle("Dev", false, false), "Hello, Dev.");
 
-        // Branch path 2: name == null, formal == true, shouting == true
+        // Path 2: name == null (if), formal == true (if), shouting == true (if)
         assertEquals(helloWorld.greetWithStyle(null, true, true), "GOOD DAY, WORLD!");
 
-        // Branch path 3: cleanName.length() > MAX_LENGTH (true)
+        // Path 3: cleanName.length() > MAX_LENGTH (if == true)
         try {
             helloWorld.greetWithStyle("A".repeat(21), false, false);
             fail("Expected IllegalArgumentException for name over 20 characters.");
@@ -219,7 +252,7 @@ public class HelloWorldTest {
             assertEquals(expected.getMessage(), "Name cannot exceed 20 characters.");
         }
 
-        // Branch path 4: !active (true)
+        // Path 4: !active (if == true)
         helloWorld.turnOff();
         try {
             helloWorld.greetWithStyle("Dev", false, false);
