@@ -36,11 +36,8 @@ The code is written in **100% classic imperative style**: no lambdas, no functio
 └── src
     ├── main/java/com/topchiyski/helloworld
     │   └── HelloWorld.java          # System under test
-    └── test
-        ├── java/com/topchiyski/helloworld
-        │   └── HelloWorldTest.java  # ISTQB technique-driven tests
-        └── resources
-            └── testng.xml           # TestNG suite configuration
+    └── test/java/com/topchiyski/helloworld
+        └── HelloWorldTest.java      # ISTQB technique-driven tests
 ```
 
 ## Business Rules Under Test
@@ -105,7 +102,7 @@ Expected result: `Tests run: 12, Failures: 0, Errors: 0, Skipped: 0`, `All cover
 
 After `verify`, open `target/site/jacoco/index.html` to see line and branch coverage of `HelloWorld`, line by line.
 
-The TestNG suite is configured in [`src/test/resources/testng.xml`](src/test/resources/testng.xml) and runs automatically through the Maven Surefire plugin.
+The Maven Surefire plugin finds and runs the TestNG tests automatically (on the JUnit Platform since Surefire 3.6), so no `testng.xml` suite file is needed.
 
 ## Contact & Questions
 

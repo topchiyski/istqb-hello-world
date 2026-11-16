@@ -33,11 +33,6 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.6.1</version>
-                <configuration>
-                    <suiteXmlFiles>
-                        <suiteXmlFile>src/test/resources/testng.xml</suiteXmlFile>
-                    </suiteXmlFiles>
-                </configuration>
             </plugin>
             <!-- Measures the "100% statement and branch coverage" claim instead of asserting it:
                  ./mvnw verify fails if HelloWorld drops below 100% line or branch coverage.
