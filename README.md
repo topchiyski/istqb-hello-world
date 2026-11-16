@@ -1,5 +1,7 @@
 # Testing "Hello, World!" with ISTQB CTFL & TestNG (Imperative Edition)
 
+[![CI](https://github.com/topchiyski/istqb-hello-world/actions/workflows/ci.yml/badge.svg)](https://github.com/topchiyski/istqb-hello-world/actions/workflows/ci.yml)
+
 > Every developer writes `"Hello, World!"` on day one. Almost no one learns how to test it on day two.
 
 ## About This Repository
@@ -26,6 +28,7 @@ The code is written in **100% classic imperative style**: no lambdas, no functio
 
 ```text
 .
+├── .github/                         # CI workflow and Dependabot configuration
 ├── .mvn/wrapper/                    # Maven Wrapper config (pins the Maven version)
 ├── mvnw                             # Maven Wrapper script (macOS / Linux)
 ├── mvnw.cmd                         # Maven Wrapper script (Windows)
@@ -33,11 +36,8 @@ The code is written in **100% classic imperative style**: no lambdas, no functio
 └── src
     ├── main/java/com/topchiyski/helloworld
     │   └── HelloWorld.java          # System under test
-    └── test
-        ├── java/com/topchiyski/helloworld
-        │   └── HelloWorldTest.java  # ISTQB technique-driven tests
-        └── resources
-            └── testng.xml           # TestNG suite configuration
+    └── test/java/com/topchiyski/helloworld
+        └── HelloWorldTest.java      # ISTQB technique-driven tests
 ```
 
 ## Business Rules Under Test
@@ -53,15 +53,15 @@ Defined in [`HelloWorld.java`](src/main/java/com/topchiyski/helloworld/HelloWorl
 
 ## ISTQB Traceability Matrix
 
-Each test in [`HelloWorldTest.java`](src/test/java/com/topchiyski/helloworld/HelloWorldTest.java) maps to a CTFL technique:
+Each test in [`HelloWorldTest.java`](src/test/java/com/topchiyski/helloworld/HelloWorldTest.java) maps to a CTFL technique. The syllabus also covers exploratory testing, checklist-based testing and collaboration-based approaches; those happen with people rather than in a unit test, so they are not coded here.
 
 | ISTQB Category | Technique | Test Method(s) | What It Verifies |
 | :--- | :--- | :--- | :--- |
 | **Black-Box** | Equivalence Partitioning (EP) | `testValidEquivalencePartitions()`<br>`testInvalidEquivalencePartition()` | Valid partitions (`null`, blank, normal name) and the invalid partition (>20 chars) |
 | **Black-Box** | Boundary Value Analysis (BVA) | `testValidBoundaryValues()`<br>`testInvalidUpperBoundaryValue()` | Exact edges of the length limit (`0`, `1`, `19`, `20`, and `21` characters) |
 | **Black-Box** | Decision Table Testing | `testDecisionTableRules()` | All 4 combinations of `isFormal` and `isShouting` via TestNG `@DataProvider` |
-| **Black-Box** | State Transition Testing | `testStateTransitions()` | Lifecycle transitions (`ON -> OFF -> ON`) and blocked actions in the `OFF` state |
-| **White-Box** | Statement & Branch Coverage | `testFullBranchAndStatementCoverage()` | 100% execution of all statements and `if/else` branches |
+| **Black-Box** | State Transition Testing | `testStateTransitions()`<br>`testStateSelfTransitions()` | Every valid transition (`ON -> OFF`, `OFF -> ON`, `ON -> ON`, `OFF -> OFF`) and blocked actions in the `OFF` state |
+| **White-Box** | Statement & Branch Coverage | `testFullBranchAndStatementCoverage()` | Every statement and `if/else` branch in `greetWithStyle()`; [JaCoCo](https://www.jacoco.org/jacoco/) measures 100% line and branch coverage of `HelloWorld` for the whole suite and fails the build below it |
 | **Experience-Based** | Error Guessing | `testErrorGuessingWhitespaceAndPadding()` | Padded whitespace (`"   Alice   "`) and trimming before length validation |
 
 ## Getting Started
@@ -77,24 +77,32 @@ That's it. You do **not** need to install Maven. The project ships with the [Mav
 macOS / Linux:
 
 ```bash
-./mvnw clean test
+./mvnw clean verify
 ```
 
 Windows (Command Prompt):
 
 ```bat
-mvnw.cmd clean test
+mvnw.cmd clean verify
 ```
 
 Windows (PowerShell):
 
 ```powershell
-.\mvnw.cmd clean test
+.\mvnw.cmd clean verify
 ```
 
-> Already have Maven installed? `mvn clean test` works too.
+Expected result: `Tests run: 12, Failures: 0, Errors: 0, Skipped: 0`, `All coverage checks have been met.` and `BUILD SUCCESS`.
 
-The TestNG suite is configured in [`src/test/resources/testng.xml`](src/test/resources/testng.xml) and runs automatically through the Maven Surefire plugin.
+`verify` runs the tests and then the coverage gate. To run only the tests, use `clean test` instead.
+
+> Already have Maven installed? `mvn clean verify` works too.
+
+### Coverage Report
+
+After `verify`, open `target/site/jacoco/index.html` to see line and branch coverage of `HelloWorld`, line by line.
+
+The Maven Surefire plugin finds and runs the TestNG tests automatically (on the JUnit Platform since Surefire 3.6), so no `testng.xml` suite file is needed.
 
 ## Contact & Questions
 
